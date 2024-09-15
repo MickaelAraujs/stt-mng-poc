@@ -47,10 +47,5 @@ export function createStore<TState extends Record<string, any>>(
   state = createInitialStateFn(getState, setState);
   listeners = new Set<() => void>();
 
-  return {
-    getState,
-    setState,
-    subscribe,
-    useStore,
-  }
+  return useStore;
 }

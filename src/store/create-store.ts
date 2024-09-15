@@ -1,6 +1,8 @@
 type SetterFn<TState> = (prevState: TState) => Partial<TState>;
 
-export function createStore<TState>(initialState: TState) {
+export function createStore<TState extends Record<string, any>>(
+  initialState: TState
+) {
   let state = initialState;
   const listeners = new Set<() => void>();
 

@@ -19,19 +19,8 @@ export function UserMenu() {
     }
   }, [])
 
-  const login = () => {
-    globalStore.setState({
-      user: {
-        email: 'jhondoe@test.com',
-        name: 'Jhon Doe',
-      }
-    })
-  }
-  const logout = () => {
-    globalStore.setState({
-      user: null,
-    })
-  }
+  const login = globalStore.getState().login;
+  const logout = globalStore.getState().logout;
 
   if (!user) {
     return (

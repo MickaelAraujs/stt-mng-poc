@@ -5,9 +5,24 @@ import { createStore } from "./create-store";
 interface IGlobalStore {
   user: IUser | null;
   todos: ITodo[];
+  login: () => void;
+  logout: () => void;
 }
 
-export const globalStore = createStore<IGlobalStore>({
+export const globalStore = createStore<IGlobalStore>((getState, setState) => ({
   user: null,
   todos: [],
-});
+  login: () => {
+    setState(() => ({
+      user: {
+        email: 'jhondoe@test.com',
+        name: 'Jhon Doe',
+      }
+    }))
+  },
+  logout: () => {
+    setState(() => ({
+      user: null,
+    }))
+  }
+}));

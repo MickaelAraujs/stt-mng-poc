@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 type SetterFn<TState> = (prevState: TState) => Partial<TState>;
 type SetStateFn<TState> = (partialState: Partial<TState> | SetterFn<TState>) => void;
 type GetStateFn<TState> = () => TState;
@@ -38,6 +40,25 @@ export function createStore<TState extends Record<string, any>>(
     notify();
   }
 
+  const useStore = <TValue>(selectorFn: (currentState: TState) => TValue): TValue => {
+    const [value, setValue] = useState(() => selectorFn(state));
+
+    useEffect(() => {
+      const unsubscribe = subscribe(() => {
+        const newValue = selectorFn(state);
+        if (newValue !== value) {
+          setValue(newValue);
+        }
+      });
+
+      return () => {
+        unsubscribe();
+      }
+    }, [selectorFn, value]);
+
+    return value;
+  }
+
   state = createInitialStateFn(getState, setState);
   listeners = new Set<() => void>();
 
@@ -45,5 +66,6 @@ export function createStore<TState extends Record<string, any>>(
     getState,
     setState,
     subscribe,
+    useStore,
   }
 }

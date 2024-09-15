@@ -2,6 +2,19 @@ type SetterFn<TState> = (prevState: TState) => Partial<TState>;
 
 export function createStore<TState>(initialState: TState) {
   let state = initialState;
+  const listeners = new Set<() => void>();
+
+  const subscribe = (listener: () => void) => {
+    listeners.add(listener);
+
+    return () => {
+      listeners.delete(listener);
+    }
+  }
+
+  const notify = () => {
+    listeners.forEach(listener => listener());
+  }
 
   const getState = () => state
 
@@ -14,10 +27,13 @@ export function createStore<TState>(initialState: TState) {
       ...state,
       ...newValue,
     };
+
+    notify();
   }
 
   return {
     getState,
     setState,
+    subscribe,
   }
 }
